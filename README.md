@@ -3,7 +3,7 @@
 > Hello! I go by **Magic** (and sometimes **Legends**) — those are my Discord display names, past and present.  
 > This is where I store my published work: modules, packages, and libraries I've built for Roblox.
 
-Each folder in this repo is its own **Section**, containing a standalone module or project.
+Each folder in this repo is its own **Section**, containing a module or project.
 
 ---
 
