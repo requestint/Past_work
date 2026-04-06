@@ -17,6 +17,13 @@ A lightweight event module for same-context communication.
 
 ---
 
+### Conduit
+It's a module that allow's  the user to do constant pull and/or Post requests to a specific Url or Destionation.
+The Typical usecase for this would be for discord -> roblox communication to do stuff like moderate, and verifiy users' inside the game; 
+there could be more usecase's but those are the typical ones. 
+
+--- 
+
 ### RelayNet (Unrealeased, Comming Soon!)
 My first networker handles cross-context communication.
 
