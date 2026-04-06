@@ -20,6 +20,7 @@ Conduit.__index = Conduit
 Conduit.Saved = {}
 Conduit.Constants = {
 	MaxListeners = 8,
+	Total_Http_requests = 0,
 }
 
 --------------------
@@ -56,6 +57,16 @@ local function GetListener(ListenerName: string)
 			return listener
 		end
 	end
+end
+
+local function GetListenerCount(): number
+	local Count = 0
+
+	for index, listener in Conduit.Saved do
+		Count += 1
+	end
+
+	return Count
 end
 
 local function getDef(): ConduitPartition
@@ -149,7 +160,7 @@ local function IsConduitBlocked(Partition: Listener): boolean
 		return true, "Await for pending response, to append to partition"
 	end
 
-	if math.clamp(Partition.Request_count, 0, 500) >= 500 then
+	if math.clamp(Conduit.Constants.Total_Http_requests, 0, math.floor(500/GetListenerCount())) == math.floor(500/GetListenerCount()) then
 		Partition.Signals.OnYield:Fire(
 			"We've reached the max amount of applical requests per minute. Please wait atleast a minute before making another request."
 		)
@@ -173,16 +184,6 @@ local function getSigsViaMeth(Method: string): { [string]: SignalType }
 			OnYield = Signal.new("OnYield"),
 		}
 	end
-end
-
-local function GetListenerCount(): number
-	local Count = 0
-
-	for index, listener in Conduit.Saved do
-		Count += 1
-	end
-
-	return Count
 end
 
 function Conduit.CreatePartition(PartitionInfo: ConduitPartition): ConduitPartition
@@ -308,6 +309,9 @@ function Conduit:Start()
 			while task.wait(1) do
 				--- Checking if the socket is currently blocked
 				if IsConduitBlocked(self) then
+					warn("Conduit Instance Is On Yield Watting for HttpService To Refresh your http request count before doing anymore")
+					task.wait(3)
+
 					continue
 				end
 
@@ -317,13 +321,18 @@ function Conduit:Start()
 
 				local success, result = pcall(function()
 					self.Pending = true
-
+					
 					if self.Method:upper() == "GET" then
 						--- Varibles
 						local Page = HttpService:GetAsync(self.Url, true)
 						local LuauInterpretedPage = HttpService:JSONDecode(Page)
 						local IsPageEmpty = #LuauInterpretedPage <= 0
 
+						--- Updating ReadOnly Varibles
+						Conduit.Constants.Total_Http_requests += 1
+						self.Request_count += 1
+
+						
 						--- Now we'll check if it's empty
 						if IsPageEmpty and not CacheCanBeAcknowladged(self) then
 							return "Empty Page and No Cache To Be Acknowladged"
@@ -347,12 +356,10 @@ function Conduit:Start()
 					--- tracking how long the stream has been open for
 					-- to check if we've been doing this for over a minute
 					if tick() - self.LastRefreshTime >= 60 then
+						Conduit.Constants.Total_Http_requests -= self.Request_count
 						self.Request_count = 0
 						self.LastRefreshTime = tick()
 					end
-
-					--- Updating the ReadOnly Varibles
-					self.Request_count += 1
 
 					--- Checking if we've caught an empty payload
 					if result == "Empty Page and No Cache To Be Acknowladged" then
