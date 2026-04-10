@@ -24,6 +24,17 @@ there could be more usecase's but those are the typical ones.
 
 --- 
 
+### InputBinderService
+My attempt to Upgrade the API of UserInputService + ContextActionService
+ 
+ To allow user's to have a series of limitless InputCombinations without having to use UserInputService:IsKeyDown For Every single check
+
+```lua
+Controller:CreateInputConnection("Dash", "").OnBegan:AddListener(function()
+   -- fires only when both LB and RT are held
+end)
+```
+
 ### RelayNet (Unrealeased, Comming Soon!)
 My first networker handles cross-context communication.
 
