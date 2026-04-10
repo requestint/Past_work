@@ -8,7 +8,7 @@ local UserInputService = game:GetService("UserInputService")
 
 -----------------------
 ----- [ Modules ] -----
-local Signal = require(script.Signal)
+local Signal = require("../Signal/Signal")
 
 ----------------------
 ----- [ Tables ] -----
