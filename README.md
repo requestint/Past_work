@@ -30,7 +30,7 @@ My attempt to Upgrade the API of UserInputService + ContextActionService
  To allow user's to have a series of limitless InputCombinations without having to use UserInputService:IsKeyDown For Every single check
 
 ```lua
-Controller:CreateInputConnection("Dash", "").OnBegan:AddListener(function()
+Controller:CreateInputConnection("Dash", "<LB+RT>").OnBegan:AddListener(function()
    -- fires only when both LB and RT are held
 end)
 ```
