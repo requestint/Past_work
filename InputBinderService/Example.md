@@ -11,7 +11,7 @@ writing nested `IsKeyDown` checks on every frame yourself.
 
 ## Ability Script
 
-#### A LocalScript that registers chord bindings and responds when they're activated
+#### A LocalScript that registers InputBindings and responds when they're activated
 ```lua
 ------------------------
 ----- [ Services ] -----
