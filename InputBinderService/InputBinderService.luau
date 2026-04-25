@@ -146,7 +146,7 @@ function InputBinderService:Update()
 
 		if CombinationPressed then
 			--- Vaildation
-			if alias.Fired then
+			if alias.Fired then --[[REMOVE THIS STATMENT IF YOU WANT UR ONBEGAN SIGNAL TO FIRE FOR HOWEVER LONG IT IS PRESSED]]
 				continue
 			end
 
